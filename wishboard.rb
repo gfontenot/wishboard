@@ -89,9 +89,11 @@ __END__
     <div id="nav">
       <% unless @tags.length == 0 %>
         <div id="nav_header">Filter by tag</div>
-        <% @tags.each do |tag| %>
-        <div><a href="/<%= @user %>/<%= tag %>"><%= tag %></a></div>
-        <% end %>
+        <table border="0" cellspacing="0" cellpadding="0">
+          <% @tags.each do |tag| %>
+          <tr><td><a href="/<%= @user %>/<%= tag %>"><%= tag %></a></td></tr>
+          <% end %>
+        </table>
       <% else %>
         <div><a href="/<%= @user %>">Return</a></div>
       <% end %>

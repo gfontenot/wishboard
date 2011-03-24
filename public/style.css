@@ -11,6 +11,11 @@ a
 	color:#1D5669;
 }
 
+table
+{
+	border-spacing: 2px 2px;
+}
+
 #header
 {
 	color:#1D5669;
@@ -95,6 +100,7 @@ border-radius: 3px;
 
 #nav a
 {
+	line-height: 190%;
 	color: rgba(100,100,100,0.4);
 	-webkit-transition: color .1s ease-in-out;
 	-moz-transition: color .2s ease-in-out;
