@@ -1,4 +1,4 @@
-##Wishboard - A Wishlist generated from [Pinboard][]
+#Wishboard - A Wishlist generated from [Pinboard][]
 
 Pretty basic. Just go to `wishboard.heroku.com/<pinboard-user-name>` to see a list of items you have marked with the tag "want". No signup. Works off parsing the public JSON feed for the user. See an example [here][my_wishboard]
 
