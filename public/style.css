@@ -23,6 +23,28 @@ table
 	font-weight: bolder;
 }
 
+#banner
+{
+	background: #444;
+	border-bottom: 1px solid #222;
+	top: 0px;
+	left: 0px;
+	min-width: 1100px;
+	padding: 8px 10px 6px;
+	height: 20px;
+	width: 100%;
+	position: absolute;
+}
+
+#banner #wishboard-name
+{
+	color: white;
+	font-size: 18px;
+	font-weight: bold;
+	text-shadow: rgba(0, 0, 0, 0.496094) 0px -1px 0px;
+	text-transform: lowercase;
+}
+
 #content
 {
 	padding-top: 20px;
@@ -45,7 +67,6 @@ table
 #wishlist-item
 {
 	float: left;
-	position:relative;
 	display:block;
 	text-align:left;
 }

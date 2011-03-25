@@ -55,6 +55,9 @@ __END__
   <link rel="stylesheet" href="/style.css" type="text/css" media="screen, projection" charset="utf-8">
 </head>
 <body>
+  <div id="banner">
+    <a id="wishboard-name" href="/">Wishboard</a>
+  </div>
   <%= yield %>
 </body>
 </html>
