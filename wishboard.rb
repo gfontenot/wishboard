@@ -46,17 +46,17 @@ end
 __END__
 
 @@ layout
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <meta charset="utf-8">
   <title><%= @title %></title>
-  <link rel="stylesheet" href="/style.css" type="text/css" media="screen, projection" charset="utf-8">
+	<link rel="stylesheet" href="/reset.css" type="text/css" media="all" charset="utf-8">
+  <link rel="stylesheet" href="/style.css" type="text/css" media="all" charset="utf-8">
 </head>
 <body>
   <div id="banner">
-    <a id="wishboard-name" href="/">Wishboard</a>
+    <a href="/">wishboard</a>
   </div>
   <%= yield %>
 </body>
@@ -65,41 +65,37 @@ __END__
 @@ wish
 
 <div id="content">
-  <div id="header"><%= @user %>'s Wishboard:</div>
   <div id="left-column">
-    <% @items.each do |item| %>
-    <div id="wishlist-item">
-      <p>
-        <div><a href="<%= item['u'] %>" id="item"><%= item['d'] %></a></div>
-        <% unless item['n'] == "" %>
-          <div id="description"><%= item['n'] %></div>
-        <% end %>
-        <div>
-          <% item['t'].each do |tag| %>
-            <% tag = tag.strip %>
-            <% unless tag == "want" %>
-              <a href="/<%= @user %>/<%= tag %>" id="tag"><%= tag %></a>
-            <% end %>
-          <% end %>
-          </br>
-        </div>
-        </p>
-       </div>
-       <div style="clear:both"></div>
-      <% end %>
+	  <h1><%= @user %>'s Wishboard:</h1>
+	  <ol>
+			<% @items.each do |item| %>
+			<li class="wishlist-item">
+				<h2><a href="<%= item['u'] %>"><%= item['d'] %></a></h2>
+				<% unless item['n'] == "" %>
+					<span class="description"><%= item['n'] %></span>
+				<% end %>
+				<div>
+					<% item['t'].each do |tag| %>
+						<% tag = tag.strip %>
+						<% unless tag == "want" %>
+							<a href="/<%= @user %>/<%= tag %>" class="tag"><%= tag %></a>
+						<% end %>
+					<% end %>
+				</div>
+			</li>
+			<% end %>
+		</ol>
   </div>
-  <div id="right-column">
-    <div id="nav">
-      <% unless @tags.length == 0 %>
-        <div id="nav_header">Filter by tag</div>
-        <table border="0" cellspacing="0" cellpadding="0">
-          <% @tags.each do |tag| %>
-          <tr><td><a href="/<%= @user %>/<%= tag %>"><%= tag %></a></td></tr>
-          <% end %>
-        </table>
-      <% else %>
-        <div><a href="/<%= @user %>">Return</a></div>
-      <% end %>
-    </div>
+  <div id="nav">
+		<% unless @tags.length == 0 %>
+			<span id="nav_header">Filter by tag</span>
+			<ol>
+				<% @tags.each do |tag| %>
+				<li><a href="/<%= @user %>/<%= tag %>"><%= tag %></a></li>
+				<% end %>
+			</ol>
+		<% else %>
+			<div><a href="/<%= @user %>">Return</a></div>
+		<% end %>
   </div>
 </div>
