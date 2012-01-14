@@ -30,7 +30,15 @@ def get_json_content(user, filter_tag = nil)
     url = "#{url}t:#{URI.encode(filter_tag)}"
   end
   data = Net::HTTP.get_response(URI.parse(url)).body
-  return JSON.parse(data)
+  items = []
+  JSON.parse(data).each do |item|
+    item['t'].each { |t| t.strip! }
+    item['t'].delete_if { |tag| tag == 'want' }
+    items << item
+  end
+
+  return items
+
 end
 
 def get_related_tags(items)
@@ -58,44 +66,42 @@ __END__
   <div id="banner">
     <a href="/">wishboard</a>
   </div>
-  <%= yield %>
+  <div id="content">
+    <%= yield %>
+  </div>
 </body>
 </html>
 
 @@ wish
 
-<div id="content">
-  <div id="left-column">
-	  <h1><%= @user %>'s Wishboard:</h1>
-	  <ol>
-			<% @items.each do |item| %>
-			<li class="wishlist-item">
-				<h2><a href="<%= item['u'] %>"><%= item['d'] %></a></h2>
-				<% unless item['n'] == "" %>
-					<span class="description"><%= item['n'] %></span>
+@@ wish
+<div id="left-column">
+  <h1><%= @user %>'s Wishboard:</h1>
+  <ol>
+		<% @items.each do |item| %>
+		<li class="wishlist-item">
+			<h2><a href="<%= item['u'] %>"><%= item['d'] %></a></h2>
+			<% unless item['n'] == "" %>
+				<span class="description"><%= item['n'] %></span>
+			<% end %>
+			<div>
+				<% item['t'].each do |tag| %>					
+					<a href="/<%= @user %>/<%= tag %>" class="tag"><%= tag %></a>
 				<% end %>
-				<div>
-					<% item['t'].each do |tag| %>
-						<% tag = tag.strip %>
-						<% unless tag == "want" %>
-							<a href="/<%= @user %>/<%= tag %>" class="tag"><%= tag %></a>
-						<% end %>
-					<% end %>
-				</div>
-			</li>
+			</div>
+		</li>
+		<% end %>
+	</ol>
+</div>
+<div id="nav">
+	<% unless @tags.length == 0 %>
+		<span id="nav_header">Filter by tag</span>
+		<ol>
+			<% @tags.each do |tag| %>
+			<li><a href="/<%= @user %>/<%= tag %>"><%= tag %></a></li>
 			<% end %>
 		</ol>
-  </div>
-  <div id="nav">
-		<% unless @tags.length == 0 %>
-			<span id="nav_header">Filter by tag</span>
-			<ol>
-				<% @tags.each do |tag| %>
-				<li><a href="/<%= @user %>/<%= tag %>"><%= tag %></a></li>
-				<% end %>
-			</ol>
-		<% else %>
-			<div><a href="/<%= @user %>">Return</a></div>
-		<% end %>
-  </div>
+	<% else %>
+		<div><a href="/<%= @user %>">Return</a></div>
+	<% end %>
 </div>
