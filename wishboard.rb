@@ -4,7 +4,12 @@ require 'net/http'
 require 'json'
 
 get '/' do
-  "Hello World"
+  @title = "Wishboard"
+  erb :home
+end
+
+post '/' do
+  redirect "/#{params[:user]}"
 end
 
 get '/:user' do
@@ -72,7 +77,12 @@ __END__
 </body>
 </html>
 
-@@ wish
+@@ home
+<h1>View an user's wishboard</h1>
+<form action="/" method="post">
+  <input type="text" name="user" id="user" placeholder="Pinboard Username"/>
+  <input type="submit" name="submit" value="➜"/>
+</form>
 
 @@ wish
 <div id="left-column">
