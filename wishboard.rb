@@ -17,7 +17,12 @@ get '/:user' do
   @user = params[:user]
   @items = get_json_content(@user)
   @tags = get_related_tags(@items)
-  erb :wish
+
+  unless @items.count > 0
+    erb :error
+  else
+    erb :wish
+  end
 end
 
 get '/:user/:tag' do
@@ -36,10 +41,13 @@ def get_json_content(user, filter_tag = nil)
   end
   data = Net::HTTP.get_response(URI.parse(url)).body
   items = []
-  JSON.parse(data).each do |item|
-    item['t'].each { |t| t.strip! }
-    item['t'].delete_if { |tag| tag == 'want' }
-    items << item
+  begin
+    JSON.parse(data).each do |item|
+      item['t'].each { |t| t.strip! }
+      item['t'].delete_if { |tag| tag == 'want' }
+      items << item
+    end
+  rescue
   end
   return items
 end
@@ -107,6 +115,14 @@ __END__
     <input type="submit" name="submit" value="➜"/>
   </form>
 </div>
+
+@@ error
+<h1>Oops!</h1>
+<p>
+  Either <%= @user %> hasn't tagged anything with <code>want</code>, or there isn't a pinboard user with that name.
+</p>
+<p><a href="/">Go home and try again!</a></p>
+
 
 @@ wish
 <div id="left-column">
