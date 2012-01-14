@@ -3,7 +3,7 @@
 
 body {
 	background-color:#F9F9F9;
-	font-family: Arial, sans-serif;
+	font-family: Helvetica, Arial, sans-serif;
 	font-size: .85em;
 	}
 
@@ -14,14 +14,37 @@ a {
 
 h1 {
 	color:#1D5669;
-	font-size: 1.5em;
+	font-size: 2em;
 	font-weight: bold;
+	margin-bottom: .5em;
 	}
 
 h2 {
 	font-weight: bold;
 	font-size: 1em;
 	padding-bottom: .5em;
+	}
+
+input {
+	font-size: 2em;
+	}
+
+input[type="submit"] {
+	border: none;
+	background-color: transparent;
+	cursor: pointer;
+
+	text-shadow: 2px 2px 2px rgba(0, 0, 0, .4);
+
+	-webkit-transition: color .1s ease-in-out;
+	-moz-transition: color .2s ease-in-out;
+	-o-transition: color .2s ease-in-out;
+	transition: color .2s ease-in-out;	
+
+	}
+
+input[type="submit"]:hover {
+	color: #3c3;
 	}
 
 /* #mark Banner */
@@ -44,7 +67,6 @@ h2 {
 	width: 60em;
 	margin: 1em auto;
 	}
-
 
 /* #mark left column */
 
@@ -84,15 +106,15 @@ h2 {
 	}
 
 
-/* #mark Nav / Left bar */
+/* #mark Nav / Right bar */
 
-#nav {
+nav {
 	padding: 1em;
 	width: 20%;
 	float: right;
 	}
 
-#nav ol {
+nav ol {
 	margin-top: 1em;
 	}
 
@@ -104,7 +126,7 @@ h2 {
 	border-radius: 3px;
 	}
 
-#nav a {
+nav a {
 	line-height: 190%;
 	color: rgba(100,100,100,0.4);
 	-webkit-transition: color .1s ease-in-out;
@@ -113,10 +135,10 @@ h2 {
 	transition: color .2s ease-in-out;
 	}
 
-#nav a:hover {
+nav a:hover {
 	color: #333;
 	}
 
-#nav b {
+nav b {
 	font-size: 130%;
 	}

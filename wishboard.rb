@@ -41,9 +41,7 @@ def get_json_content(user, filter_tag = nil)
     item['t'].delete_if { |tag| tag == 'want' }
     items << item
   end
-
   return items
-
 end
 
 def get_related_tags(items)
@@ -103,7 +101,7 @@ __END__
 		<% end %>
 	</ol>
 </div>
-<div id="nav">
+<nav>
 	<% unless @tags.length == 0 %>
 		<span id="nav_header">Filter by tag</span>
 		<ol>
@@ -112,6 +110,6 @@ __END__
 			<% end %>
 		</ol>
 	<% else %>
-		<div><a href="/<%= @user %>">Return</a></div>
+		<a href="/<%= @user %>">Return</a>
 	<% end %>
-</div>
+</nav>
