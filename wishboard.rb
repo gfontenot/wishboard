@@ -65,6 +65,8 @@ __END__
 	<link rel="stylesheet" href="/reset.css" type="text/css" media="all" charset="utf-8">
   <link rel="stylesheet" href="/style.css" type="text/css" media="all" charset="utf-8">
 
+  <link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+
   <script type="text/javascript">
 
     var _gaq = _gaq || [];
@@ -79,9 +81,6 @@ __END__
 
   </script>
 
-  <script type="text/javascript" src="http://use.typekit.com/bbo8ewl.js"></script>
-  <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-
 </head>
 <body>
   <div id="banner">
@@ -94,15 +93,25 @@ __END__
 </html>
 
 @@ home
-<h1>View an user's wishboard</h1>
-<form action="/" method="post">
-  <input type="text" name="user" id="user" placeholder="Pinboard Username"/>
-  <input type="submit" name="submit" value="➜"/>
-</form>
+<p>
+  Wishboard is a single-file <a href="http://www.sinatrarb.com/">Sinatra</a> app that generates a wishlist based on a user's <a href="http://pinboard.in">Pinboard</a> account. If you have a pinboard account, you can generate your own wishlist here automatically by tagging items with <code>want</code>. If you know the wishlist that you want to see, you can get there either by using the form on this page, or by going directly to <code>wishboard.heroku.com/[pinboard-username]</code>.
+</p>
+<p>
+  All the source code for this site is hosted on <a href="http://github.com/gfontenot/wishboard">GitHub</a>, and the app itself is hosted on a free instance at <a href="http://heroku.com">Heroku</a>. If you would just like to see an example of what a wishlist looks like here, you can <a href="/gfontenot">look at mine</a>.
+</p>
+
+<div id="user-jump">
+  <h1 id="main-headline">View a user's wishboard</h1>
+  <form action="/" method="post">
+    <input type="text" name="user" id="user" placeholder="Pinboard Username"/>
+    <input type="submit" name="submit" value="➜"/>
+  </form>
+</div>
 
 @@ wish
 <div id="left-column">
   <h1><%= @user %>'s Wishboard:</h1>
+  <h3><%= @items.count %> items</h3>
   <ol>
 		<% @items.each do |item| %>
 		<li class="wishlist-item">

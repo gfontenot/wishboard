@@ -4,7 +4,6 @@
 body {
 	background-color:#F9F9F9;
 	font-family: Helvetica, Arial, sans-serif;
-	font-size: .85em;
 	}
 
 a {
@@ -12,39 +11,29 @@ a {
 	color:#1D5669;
 	}
 
+h2 a:hover {
+	text-decoration: underline;
+	}
+
+h1, h2, #banner a {
+	font-family: HelveticaNeue-Light, Helvetica, sans-serif;
+	}
+
 h1 {
 	color:#1D5669;
-	font-size: 2em;
-	font-weight: bold;
+	font-size: 1.5em;
 	margin-bottom: .5em;
 	}
 
 h2 {
-	font-weight: bold;
-	font-size: 1em;
+	font-size: 1.2em;
 	padding-bottom: .5em;
 	}
 
-input {
-	font-size: 2em;
-	}
-
-input[type="submit"] {
-	border: none;
-	background-color: transparent;
-	cursor: pointer;
-
-	text-shadow: 2px 2px 2px rgba(0, 0, 0, .4);
-
-	-webkit-transition: color .1s ease-in-out;
-	-moz-transition: color .2s ease-in-out;
-	-o-transition: color .2s ease-in-out;
-	transition: color .2s ease-in-out;	
-
-	}
-
-input[type="submit"]:hover {
-	color: #3c3;
+code {
+	font-family: 'Inconsolata', sans-serif;
+	background: #FDF6E3;
+  color: #2AA198;
 	}
 
 /* #mark Banner */
@@ -57,16 +46,80 @@ input[type="submit"]:hover {
 
 #banner a {
 	color: white;
-	font-size: 1.5em;
-	font-weight: bold;	
+	font-size: 1.2em;
 	}
 
 /* #mark App body */	
 
 #content {
-	width: 60em;
+	width: 50em;
 	margin: 1em auto;
 	}
+
+/* #mark Home Page */
+
+p {
+
+	font-size: 125%;
+	line-height: 1.2;
+	width: 45%;
+	margin-left: 1%;
+	margin-right: 4%;
+	margin-top: 1%;
+	float: left;
+	}
+
+p a {
+	text-decoration: underline;
+	}
+
+#user-jump {
+	width: 48%;
+	margin: 1%;
+	float: left;
+	}
+
+#user-jump h1 {
+	font-size: 2.2em;
+	margin-bottom: 0;
+	}
+
+/*form {
+	text-align: center;
+	}*/
+
+input {
+	font-size: 1.6em;
+	border: none;
+	vertical-align: middle;
+	}
+
+input[type="text"] {
+	border: 1px solid #ccc;
+	box-shadow: 0px 0px 8px rgba(0, 0, 0, .3);
+	padding: .5em;
+	}
+
+input[type="submit"] {
+
+	font-size: 4em;
+
+	background-color: transparent;
+	cursor: pointer;
+
+	text-shadow: 2px 2px 2px rgba(0, 0, 0, .4);
+
+	-webkit-transition: color .1s ease-in-out;
+	-moz-transition: color .2s ease-in-out;
+	-o-transition: color .2s ease-in-out;
+	transition: color .2s ease-in-out;
+
+	}
+
+input[type="submit"]:hover {
+	color: #3c3;
+	}
+
 
 /* #mark left column */
 
@@ -74,6 +127,18 @@ input[type="submit"]:hover {
 	width: 70%;
 	padding: 1em;
   float: left;
+	}
+
+#left-column h1 {
+	float: left;
+	}
+
+#left-column h3 {
+
+	color: #999;
+
+	float: right;
+	margin-top: .5em;
 	}
 
 /* #mark Wishlist items */
@@ -87,11 +152,11 @@ input[type="submit"]:hover {
 
 .description {
 	color:#555;
+	font-size: .9em;
 	line-height: 120%;
-	margin-top: 2px;
 	clear: both;
 	display: block;
-	margin: 5px 0px;
+	margin-bottom: .5em;
 	}
 
 .tag {
@@ -99,6 +164,7 @@ input[type="submit"]:hover {
 	border: 1px solid rgba(0, 0, 0, 0.0976562);
 	border-radius: 8px;
 	float: left;
+	font-size: .8em;
 	line-height: 100%;
 	margin-right: 2px;
 	margin-top: 2px;
@@ -110,6 +176,7 @@ input[type="submit"]:hover {
 
 nav {
 	padding: 1em;
+	margin-top: .5em;
 	width: 20%;
 	float: right;
 	}
@@ -127,6 +194,7 @@ nav ol {
 	}
 
 nav a {
+	font-size: .8em;
 	line-height: 190%;
 	color: rgba(100,100,100,0.4);
 	-webkit-transition: color .1s ease-in-out;
