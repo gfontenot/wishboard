@@ -40,7 +40,7 @@ def get_related_tags(items)
       tags << tag.strip unless tag.strip == "want" or tags.include? tag.strip
     end
   end
- return tags
+ return tags.sort
 end
 
 __END__
