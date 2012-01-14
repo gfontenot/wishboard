@@ -79,6 +79,9 @@ __END__
 
   </script>
 
+  <script type="text/javascript" src="http://use.typekit.com/bbo8ewl.js"></script>
+  <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
 </head>
 <body>
   <div id="banner">
