@@ -1,6 +1,6 @@
 #Wishboard - A Wishlist generated from [Pinboard][]
 
-Pretty basic. Just go to `wishboard.heroku.com/<pinboard-user-name>` to see a list of items you have marked with the tag "want". No signup. Works off parsing the public JSON feed for the user. See an example [here][my_wishboard]
+Pretty basic. Just go to `wishboard.co/<pinboard-user-name>` to see a list of items you have marked with the tag "want". No signup. Works off parsing the public JSON feed for the user. See an example [here][my_wishboard]
 
 Design inspired by [Brett Terpstra][]'s _fantastic_ custom pinboard stylesheet (available [here][bt-pinboard]).
 
@@ -13,6 +13,6 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 [pinboard]: http://www.pinboard.in
-[my_wishboard]: http://wishboard.heroku.com/gfontenot
+[my_wishboard]: http://wishboard.co/gfontenot
 [Brett Terpstra]: http://brettterpstra.com/
 [bt-pinboard]: http://brettterpstra.com/pinboard-redesign-experiment/
