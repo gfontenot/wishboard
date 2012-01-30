@@ -21,12 +21,12 @@ get '/:user' do
   @items = get_json_content(@user)
   @tags = get_related_tags(@items)
 
-  unless @items.count > 0
-    erb :error
-  else
   # We want to show the wishlist content, unless the user doesn't
   # have any content
+  if @items.count > 0
     erb :wish
+  else
+    erb :error
   end
 end
 
