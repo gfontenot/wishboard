@@ -152,7 +152,7 @@ __END__
 
 @@ wish
 <div id="left-column">
-  <h1><%= @user %>'s Wishboard:</h1>
+  <h1><a href="/<%= @user %>"><%= @user %>'s Wishboard:</a></h1>
   <h3><%= @items.count %> items</h3>
   <ol>
 		<% @items.each do |item| %>
