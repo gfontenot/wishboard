@@ -3,15 +3,18 @@ require 'sinatra'
 require 'net/http'
 require 'json'
 
+# Render the home page if we're looking at the root
 get '/' do
   @title = "Wishboard"
   erb :home
 end
 
+# If we're using the form to get to the user page, redirect accordingly
 post '/' do
   redirect "/#{params[:user]}"
 end
 
+# Render the user's content based on the username supplied
 get '/:user' do
   @title = "#{params[:user]}'s Wishboard"
   @user = params[:user]
@@ -21,10 +24,13 @@ get '/:user' do
   unless @items.count > 0
     erb :error
   else
+  # We want to show the wishlist content, unless the user doesn't
+  # have any content
     erb :wish
   end
 end
 
+# Allow the user to dig down into a second level tag
 get '/:user/:tag' do
   @title = "#{params[:user]}'s Wishboard - [#{params[:tag]}]"
   @user = params[:user]
@@ -34,14 +40,23 @@ get '/:user/:tag' do
   erb :wish
 end
 
+# Get the array of links for the user
 def get_json_content(user, filter_tag = nil)
+
+  # Using the public rss feed for the user
   url = "http://feeds.pinboard.in/json/v1/u:#{URI.encode(user)}/t:want/"
+
+  # if we're looking at a second level tag, append it to the url
   unless filter_tag == nil
     url = "#{url}t:#{URI.encode(filter_tag)}"
   end
+
   data = Net::HTTP.get_response(URI.parse(url)).body
   items = []
+  
   begin
+    # Remove the tag want from the list of tags,
+    # strip any extra whitespace, and add a location attribute
     JSON.parse(data).each do |item|
       item['t'].each { |t| t.strip! }
       item['t'].delete_if { |tag| tag == 'want' }
@@ -52,6 +67,7 @@ def get_json_content(user, filter_tag = nil)
   return items
 end
 
+# Get the list of available second level tags
 def get_related_tags(items)
   tags = []
   items.each do |item|
