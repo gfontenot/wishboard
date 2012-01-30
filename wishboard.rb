@@ -18,8 +18,7 @@ end
 get '/:user' do
   @title = "#{params[:user]}'s Wishboard"
   @user = params[:user]
-  @items = get_json_content(@user)
-  @tags = get_related_tags(@items)
+  @items, @tags, @locations = get_json_content(@user)
 
   # We want to show the wishlist content, unless the user doesn't
   # have any content
@@ -35,8 +34,7 @@ get '/:user/:tag' do
   @title = "#{params[:user]}'s Wishboard - [#{params[:tag]}]"
   @user = params[:user]
   filter_tag = params[:tag]
-  @items = get_json_content(@user, filter_tag)
-  @tags = []
+  @items, @tags, @locations = get_json_content(@user, filter_tag)
   erb :wish
 end
 
@@ -53,7 +51,8 @@ def get_json_content(user, filter_tag = nil)
 
   data = Net::HTTP.get_response(URI.parse(url)).body
   items = []
-  
+  tags = []
+  locations = []
   begin
     # Remove the tag want from the list of tags,
     # strip any extra whitespace, and add a location attribute
@@ -68,24 +67,18 @@ def get_json_content(user, filter_tag = nil)
         item['l'] = "URL Parse error"
       end
 
-      puts item['l']
+      item['t'].each do |tag|
+        tags << tag unless tags.include? tag
+      end
+
+      locations << item['l'] unless locations.include? item['l']
 
       items << item
     end
   rescue
   end
-  return items
-end
-
-# Get the list of available second level tags
-def get_related_tags(items)
-  tags = []
-  items.each do |item|
-    item["t"].each do |tag|
-      tags << tag.strip unless tag.strip == "want" or tags.include? tag.strip
-    end
-  end
- return tags.sort
+  puts locations
+  return items, tags.sort, locations.sort
 end
 
 __END__
