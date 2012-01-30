@@ -130,17 +130,17 @@ input[type="submit"]:hover {
 
 /* #mark left column */
 
-#left-column {
+#main {
 	width: 70%;
 	padding: 1em;
   float: left;
 	}
 
-#left-column h1 {
+#main h1 {
 	float: left;
 	}
 
-#left-column h3 {
+#main h3 {
 
 	color: #999;
 

@@ -143,7 +143,7 @@ __END__
 
 
 @@ wish
-<div id="left-column">
+<div id="main">
   <h1><a href="/<%= @user %>"><%= @user %>'s Wishboard:</a></h1>
   <h3><%= @items.count %> items</h3>
   <ol>
