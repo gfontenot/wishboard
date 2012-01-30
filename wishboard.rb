@@ -77,7 +77,6 @@ def get_json_content(user, filter_tag = nil)
     end
   rescue
   end
-  puts locations
   return items, tags.sort, locations.sort
 end
 
