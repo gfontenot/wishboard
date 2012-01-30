@@ -60,6 +60,16 @@ def get_json_content(user, filter_tag = nil)
     JSON.parse(data).each do |item|
       item['t'].each { |t| t.strip! }
       item['t'].delete_if { |tag| tag == 'want' }
+
+      # Try like hell to parse the url. Assign a blank string as a last resort
+      begin
+        item['l'] = /https?:\/\/(?:[-\w\d]*\.)?([-\w\d]*\.[a-zA-Z]{2,3}(?:\.[a-zA-Z]{2})?)/i.match(item['u'])[1]
+      rescue
+        item['l'] = "URL Parse error"
+      end
+
+      puts item['l']
+
       items << item
     end
   rescue
@@ -149,13 +159,14 @@ __END__
 		<li class="wishlist-item">
 			<h2><a href="<%= item['u'] %>"><%= item['d'] %></a></h2>
 			<% unless item['n'] == "" %>
-				<span class="description"><%= item['n'] %></span>
+				<div class="description"><%= item['n'] %></div>
 			<% end %>
-			<div>
+      <div class="location">From <em><%= item['l'] %></em></div>
+			<ol class="tags">
 				<% item['t'].each do |tag| %>					
-					<a href="/<%= @user %>/<%= tag %>" class="tag"><%= tag %></a>
+					<li class="tag"><a href="/<%= @user %>/<%= tag %>"><%= tag %></a></li>
 				<% end %>
-			</div>
+			</ol>
 		</li>
 		<% end %>
 	</ol>

@@ -36,6 +36,14 @@ code {
   color: #2AA198;
 	}
 
+em {
+	font-style: italic;
+}
+
+strong {
+	font-weight: bold;
+}
+
 /* #mark Banner */
 
 #banner {
@@ -59,7 +67,6 @@ code {
 /* #mark Home Page */
 
 p {
-
 	font-size: 125%;
 	line-height: 1.2;
 	width: 45%;
@@ -150,14 +157,17 @@ input[type="submit"]:hover {
 	border-bottom: 1px dashed #999;
 	}
 
-.description {
+.description, .location {
 	color:#555;
 	font-size: .9em;
 	line-height: 120%;
-	clear: both;
-	display: block;
 	margin-bottom: .5em;
-	}
+}
+
+.tags {
+	clear: both;
+	overflow: hidden;
+}
 
 .tag {
 	background: #E7F0F0;
@@ -170,6 +180,10 @@ input[type="submit"]:hover {
 	margin-top: 2px;
 	padding: 1px 6px;
 	}
+
+.tags li:first-child {
+	margin-left: 0;
+}
 
 
 /* #mark Nav / Right bar */
