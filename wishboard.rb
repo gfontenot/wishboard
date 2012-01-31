@@ -15,10 +15,28 @@ post '/' do
 end
 
 # Render the user's content based on the username supplied
-get '/:user' do
-  @title = "#{params[:user]}'s Wishboard"
+get '/:user/?*' do |user, filter_tags|
+
+  # Build the base title. We will add tag info to it later
+  title = "#{params[:user]}'s Wishboard"
+
+  # Set @filter_tags to an empty array, then fill it with the tag content,
+  # and build the title info
+  @filter_tags = []
+  unless filter_tags.length == 0
+    @filter_tags = filter_tags.split("/")
+    title = "#{title} [#{@filter_tags.join(' + ')}]"
+  end
+
+  @title = title
   @user = params[:user]
-  @items, @tags, @locations = get_json_content(@user)
+  @items, @tags, @locations = get_json_content(@user, @filter_tags)
+
+  # Pinboard has a hard limit on their rss feeds, and only allow filtering on 3 tags.
+  # So, if we're already 2 deep, we need to wipe out the tags list
+  if @filter_tags.length == 2 
+    @tags = []
+  end
 
   # We want to show the wishlist content, unless the user doesn't
   # have any content
@@ -29,24 +47,17 @@ get '/:user' do
   end
 end
 
-# Allow the user to dig down into a second level tag
-get '/:user/:tag' do
-  @title = "#{params[:user]}'s Wishboard - [#{params[:tag]}]"
-  @user = params[:user]
-  filter_tag = params[:tag]
-  @items, @tags, @locations = get_json_content(@user, filter_tag)
-  erb :wish
-end
-
 # Get the array of links for the user
-def get_json_content(user, filter_tag = nil)
+def get_json_content(user, filter_tags)
 
   # Using the public rss feed for the user
-  url = "http://feeds.pinboard.in/json/v1/u:#{URI.encode(user)}/t:want/"
+  url = "http://feeds.pinboard.in/json/v1/u:#{URI.encode(user)}/t:want"
 
   # if we're looking at a second level tag, append it to the url
-  unless filter_tag == nil
-    url = "#{url}t:#{URI.encode(filter_tag)}"
+  if filter_tags
+    filter_tags.each do |filter_tag|
+      url = "#{url}/t:#{URI.encode(filter_tag)}"
+    end
   end
 
   data = Net::HTTP.get_response(URI.parse(url)).body
@@ -60,15 +71,16 @@ def get_json_content(user, filter_tag = nil)
       item['t'].each { |t| t.strip! }
       item['t'].delete_if { |tag| tag == 'want' }
 
-      # Try like hell to parse the url. Assign a blank string as a last resort
+      # Try like hell to parse the url. Assign an error string as a last resort
       begin
         item['l'] = /https?:\/\/(?:[-\w\d]*\.)?([-\w\d]*\.[a-zA-Z]{2,3}(?:\.[a-zA-Z]{2})?)/i.match(item['u'])[1]
       rescue
         item['l'] = "URL Parse error"
       end
 
+      # Add the item's tags 
       item['t'].each do |tag|
-        tags << tag unless tags.include? tag
+        tags << tag unless tags.include? tag or filter_tags.include? tag
       end
 
       locations << item['l'] unless locations.include? item['l']
@@ -145,7 +157,7 @@ __END__
 @@ wish
 <div id="main">
   <h1><a href="/<%= @user %>"><%= @user %>'s Wishboard:</a></h1>
-  <h3><%= @items.count %> items</h3>
+  <h3><%= @items.count %> items<%= " [#{@filter_tags.join(' + ')}]" unless @filter_tags.empty? %></h3>
   <ol>
 		<% @items.each do |item| %>
 		<li class="wishlist-item">
@@ -168,7 +180,7 @@ __END__
 		<span id="nav_header">Filter by tag</span>
 		<ol>
 			<% @tags.each do |tag| %>
-			<li><a href="/<%= @user %>/<%= tag %>"><%= tag %></a></li>
+			<li><a href="<%= request.url %>/<%= tag %>">+ <%= tag %></a></li>
 			<% end %>
 		</ol>
 	<% else %>
