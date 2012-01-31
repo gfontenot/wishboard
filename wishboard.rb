@@ -34,7 +34,7 @@ get '/:user/?*' do |user, filter_tags|
 
   # Pinboard has a hard limit on their rss feeds, and only allow filtering on 3 tags.
   # So, if we're already 2 deep, we need to wipe out the tags list
-  if @filter_tags.length == 2 
+  if @filter_tags.length == 2
     @tags = []
   end
 
