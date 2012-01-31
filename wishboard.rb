@@ -43,7 +43,7 @@ get '/:user/?*' do |user, filter_tags|
   if @items.count > 0
     erb :wish
   else
-    erb :error
+    erb :error, :locals => { :error_msg => "It looks like #{@user} hasn't tagged anything with <code>want#{ " + #{@filter_tags.join(' + ')}" unless @filter_tags.empty? }</code>!" }
   end
 end
 
@@ -61,6 +61,13 @@ def get_json_content(user, filter_tags)
   end
 
   data = Net::HTTP.get_response(URI.parse(url)).body
+
+  # If the data is empty, the user doesn't exist on Pinboard,
+  # so lets just quit while we're ahead.
+  if data == ""
+    halt erb :error, :locals => { :error_msg => "It looks like the user #{user} does not exist!" }
+  end
+
   items = []
   tags = []
   locations = []
@@ -149,7 +156,7 @@ __END__
 @@ error
 <h1>Oops!</h1>
 <p>
-  Either <%= @user %> hasn't tagged anything with <code>want</code>, or there isn't a pinboard user with that name.
+  <%= error_msg %>
 </p>
 <p><a href="/">Go home and try again!</a></p>
 
