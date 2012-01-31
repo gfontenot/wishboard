@@ -191,6 +191,6 @@ __END__
 			<% end %>
 		</ol>
 	<% else %>
-		<a href="/<%= @user %>">Return</a>
+		<a href="/<%= @user %>">Clear Tags</a>
 	<% end %>
 </nav>
