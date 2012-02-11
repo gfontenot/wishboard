@@ -2,6 +2,7 @@ require 'rubygems'
 require 'sinatra'
 require 'net/http'
 require 'json'
+require 'redcarpet'
 
 # Render the home page if we're looking at the root
 get '/' do
@@ -16,6 +17,8 @@ end
 
 # Render the user's content based on the username supplied
 get '/:user/?*' do |user, filter_tags|
+
+  @markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, :autolink => true)
 
   # Build the base title. We will add tag info to it later
   title = "#{params[:user]}'s Wishboard"
@@ -170,7 +173,7 @@ __END__
 		<li class="wishlist-item">
 			<h2><a href="<%= item['u'] %>"><%= item['d'] %></a></h2>
 			<% unless item['n'] == "" %>
-				<div class="description"><%= item['n'] %></div>
+				<div class="description"><%= @markdown.render(item['n']) %></div>
 			<% end %>
       <div class="location">From <em><%= item['l'] %></em></div>
 			<ol class="tags">
