@@ -1,6 +1,8 @@
 #Wishboard - A Wishlist generated from [Pinboard][]
 
-Pretty basic. Just go to `wishboard.co/<pinboard-user-name>` to see a list of items you have marked with the tag "want". No signup. Works off parsing the public JSON feed for the user. See an example [here][my_wishboard]
+Viewing an existing wishlish is simple. Just go to `wishboard.co/<pinboard-user-name>` to see a list of items the user has marked with the tag "want". It works by parsing the public JSON feed for the user. See an example [here][my_wishboard].
+
+Getting your wishlist displayed on Wishboard is nearly as simple. If you have a [Pinboard][] account, just start tagging items with `want`. They will automatically show up at Wishboard. If you want to get super fancy, you can use [markdown][] in the notes field, and it will be displayed correctly on Wishboard. Adding too much markup isn't recommended, but it can be handy to set up an external link, or add `em`, or `strong` to a bit of text.
 
 Design inspired by [Brett Terpstra][]'s _fantastic_ custom pinboard stylesheet (available [here][bt-pinboard]).
 
@@ -14,5 +16,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 [pinboard]: http://www.pinboard.in
 [my_wishboard]: http://wishboard.co/gfontenot
+[markdown]: http://daringfireball.net/projects/markdown/
 [Brett Terpstra]: http://brettterpstra.com/
 [bt-pinboard]: http://brettterpstra.com/pinboard-redesign-experiment/
