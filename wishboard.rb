@@ -18,6 +18,7 @@ end
 # Render the user's content based on the username supplied
 get '/:user/?*' do |user, filter_tags|
 
+  # Set up our markdown processor for later
   @markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, :autolink => true)
 
   # Build the base title. We will add tag info to it later
@@ -63,6 +64,7 @@ def get_json_content(user, filter_tags)
     end
   end
 
+  # Get the data from the API
   data = Net::HTTP.get_response(URI.parse(url)).body
 
   # If the data is empty, the user doesn't exist on Pinboard,
