@@ -24,13 +24,9 @@ get '/:user/?*' do |user, filter_tags|
   # Build the base title. We will add tag info to it later
   title = "#{params[:user]}'s Wishboard"
 
-  # Set @filter_tags to an empty array, then fill it with the tag content,
-  # and build the title info
-  @filter_tags = []
-  unless filter_tags.length == 0
-    @filter_tags = filter_tags.split("/")
-    title = "#{title} [#{@filter_tags.join(' + ')}]"
-  end
+  # Set the filter tags and build the title
+  @filter_tags = filter_tags.split("/")
+  title += " [#{@filter_tags.join(' + ')}]" unless @filter_tags.empty?
 
   @title = title
   @user = params[:user]
@@ -38,9 +34,8 @@ get '/:user/?*' do |user, filter_tags|
 
   # Pinboard has a hard limit on their rss feeds, and only allow filtering on 3 tags.
   # So, if we're already 2 deep, we need to wipe out the tags list
-  if @filter_tags.length == 2
-    @tags = []
-  end
+
+  @tags.clear if @filter_tags.length == 2
 
   # We want to show the wishlist content, unless the user doesn't
   # have any content
@@ -57,11 +52,9 @@ def get_json_content(user, filter_tags)
   # Using the public rss feed for the user
   url = "http://feeds.pinboard.in/json/v1/u:#{URI.encode(user)}/t:want"
 
-  # if we're looking at a second level tag, append it to the url
-  if filter_tags
-    filter_tags.each do |filter_tag|
-      url = "#{url}/t:#{URI.encode(filter_tag)}"
-    end
+  # Add any second level filters to the url
+  filter_tags.each do |filter_tag|
+    url += "/t:#{URI.encode(filter_tag)}"
   end
 
   # Get the data from the API
@@ -73,35 +66,17 @@ def get_json_content(user, filter_tags)
     halt erb :error, :locals => { :error_msg => "It looks like the user #{user} does not exist!" }
   end
 
-  items = []
-  tags = []
-  locations = []
-  begin
-    # Remove the tag want from the list of tags,
-    # strip any extra whitespace, and add a location attribute
-    JSON.parse(data).each do |item|
-      item['t'].each { |t| t.strip! }
-      item['t'].delete_if { |tag| tag == 'want' }
+  items, nested_tags, nested_locations = JSON.parse(data).map do |item|
+    # Remove 'want' from the list of tags
+    item['t'].reject! { |t| t == 'want' }
+    # Generate a list of all tags
+    tags = item["t"].map(&:strip) - filter_tags
+    # Parse the host URL from the item
+    item['l'] = URI.parse(item["u"]).host rescue "URL Parse error"
+    [item, tags, item['l']]
+  end.transpose
 
-      # Try like hell to parse the url. Assign an error string as a last resort
-      begin
-        item['l'] = /https?:\/\/(?:[-\w\d]*\.)?([-\w\d]*\.[a-zA-Z]{2,3}(?:\.[a-zA-Z]{2})?)/i.match(item['u'])[1]
-      rescue
-        item['l'] = "URL Parse error"
-      end
-
-      # Add the item's tags 
-      item['t'].each do |tag|
-        tags << tag unless tags.include? tag or filter_tags.include? tag
-      end
-
-      locations << item['l'] unless locations.include? item['l']
-
-      items << item
-    end
-  rescue
-  end
-  return items, tags.sort, locations.sort
+  [items, nested_tags.flatten(1).uniq.sort, nested_locations.flatten(1).uniq.sort]
 end
 
 __END__
@@ -179,7 +154,7 @@ __END__
 			<% end %>
       <div class="location">From <em><%= item['l'] %></em></div>
 			<ol class="tags">
-				<% item['t'].each do |tag| %>					
+				<% item['t'].each do |tag| %>
 					<li class="tag"><a href="/<%= @user %>/<%= tag %>"><%= tag %></a></li>
 				<% end %>
 			</ol>
