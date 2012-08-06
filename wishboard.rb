@@ -17,66 +17,87 @@ end
 
 # Render the user's content based on the username supplied
 get '/:user/?*' do |user, filter_tags|
+  @user = user
+  @filter_tags = filter_tags.split("/")
+
+  @title = page_title
+
+  @items = get_user_items
+
+  @tags = all_tags
+  @locations = all_locations
 
   # Set up our markdown processor for later
   @markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, :autolink => true)
 
-  # Build the base title. We will add tag info to it later
-  title = "#{params[:user]}'s Wishboard"
-
-  # Set the filter tags and build the title
-  @filter_tags = filter_tags.split("/")
-  title += " [#{@filter_tags.join(' + ')}]" unless @filter_tags.empty?
-
-  @title = title
-  @user = params[:user]
-  @items, @tags, @locations = get_json_content(@user, @filter_tags)
-
-  # Pinboard has a hard limit on their rss feeds, and only allow filtering on 3 tags.
-  # So, if we're already 2 deep, we need to wipe out the tags list
-
-  @tags.clear if @filter_tags.length == 2
-
-  # We want to show the wishlist content, unless the user doesn't
-  # have any content
-  if @items.count > 0
-    erb :wish
-  else
-    erb :error, :locals => { :error_msg => "It looks like #{@user} hasn't tagged anything with <code>want#{ " + #{@filter_tags.join(' + ')}" unless @filter_tags.empty? }</code>!" }
-  end
+  erb :wish
 end
 
 # Get the array of links for the user
-def get_json_content(user, filter_tags)
+def get_user_items
 
-  # Using the public rss feed for the user
-  url = "http://feeds.pinboard.in/json/v1/u:#{URI.encode(user)}/t:want"
-
-  # Add any second level filters to the url
-  filter_tags.each do |filter_tag|
-    url += "/t:#{URI.encode(filter_tag)}"
-  end
+  url = api_url
 
   # Get the data from the API
   data = Net::HTTP.get_response(URI.parse(url)).body
 
   # If the data is empty, the user doesn't exist on Pinboard,
   # so lets just quit while we're ahead.
-  if data == ""
-    halt erb :error, :locals => { :error_msg => "It looks like the user #{user} does not exist!" }
+  show_error :no_user if data == ""
+
+  # Remove the 'want' tag and add a location
+  items = JSON.parse(data).each do |i|
+    i['t'].delete('want')
+    i['l'] = URI.parse(i["u"]).host rescue "URL Parse error"
+  end rescue show_error(:filter_limit_exceeded)
+
+  # We want to show the wishlist content, unless the user doesn't
+  # have any content
+  show_error :no_items unless items.count > 0
+
+  items
+end
+
+def all_tags
+  tags = @items.map { |i| i["t"].map(&:strip) - @filter_tags }
+  tags.clear unless @filter_tags.count < 2
+  tags.flatten.uniq.sort
+end
+
+def all_locations
+  locations = @items.map { |i| i['l'] }
+  locations.flatten.uniq.sort
+end
+
+def page_title
+  # Build the base title. We will add tag info to it later
+  title = "#{@user}'s Wishboard"
+
+  # Set the filter tags and build the title
+  title += " [#{@filter_tags.join(' + ')}]" unless @filter_tags.empty?
+
+  title
+end
+
+def api_url
+  # Using the public rss feed for the user
+  url = "http://feeds.pinboard.in/json/v1/u:#{URI.encode(@user)}/t:want"
+
+  # Add any second level filters to the url
+  @filter_tags.each do |filter_tag|
+    url += "/t:#{URI.encode(filter_tag)}"
   end
 
-  items, nested_tags, nested_locations = JSON.parse(data).map do |item|
-    # Remove 'want' from the list of tags
-    item['t'].reject! { |t| t == 'want' }
-    # Generate a list of all tags
-    tags = item["t"].map(&:strip) - filter_tags
-    # Parse the host URL from the item
-    item['l'] = URI.parse(item["u"]).host rescue "URL Parse error"
-    [item, tags, item['l']]
-  end.transpose
+  url
+end
 
-  [items, nested_tags.flatten(1).uniq.sort, nested_locations.flatten(1).uniq.sort]
+def show_error(error)
+  error_msgs = {
+    :no_user => "It looks like the user #{@user} does not exist!",
+    :no_items => "It looks like #{@user} hasn't tagged anything with <code>want#{ " + #{@filter_tags.join(' + ')}" unless @filter_tags.empty? }</code>!",
+    :filter_limit_exceeded => "Looks like you have exceeded the limit of 2 tags."
+    }
+  halt erb :error, :locals => { :error_msg => error_msgs[error] }
 end
 
 __END__
